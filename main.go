@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	delay := 40.0
-	rate := 1/60.0
+	delay := 1.0
+	rate := 10.00
 	threshold := 0.5
 
 	antiConeSize(delay, rate, threshold)
@@ -17,17 +17,19 @@ func main() {
 func antiConeSize(_delay, _rate, _threshold float64) {
 
 	factor := 2 * _delay * _rate
-	coef := 1 / (1/math.Pow(math.E, -1*factor) - 1)
+	coef := 1 / (math.Pow(math.E, factor) - 1)
+
+	log.Println("factor:", factor, "coef:", coef)
 
 	sum := 0.0
 
-	for k := 1; k < 100; k++ {
+	for k := 1; k < 1000; k++ {
 
 		sum = 0.0
-		for j := k + 1; j < k+10; j++ {
-			xx := math.Pow(factor, float64(j))
-			for jj := 2; jj <= j; jj++ {
-				xx /= float64(jj)
+		for j := k + 1; j < k+100; j++ {
+			xx := 1.0
+			for jj := 1; jj <= j; jj++ {
+				xx *= factor / float64(jj)
 			}
 			sum += xx
 		}
