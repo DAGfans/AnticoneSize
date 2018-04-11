@@ -11,9 +11,9 @@ var myLog = log.New(os.Stdout, "", 0)
 
 func main() {
 
-	delay := flag.Float64("delay", 200, "Max propagation delay, unit is second")
-	rate := flag.Float64("rate", 100, "Block rate, unit is blocks/second")
-	threshold := flag.Float64("threshold", 0.5, "Percentage of honest nodes, value between 0 and 1")
+	delay := flag.Float64("delay", 40, "Max propagation delay, unit is second")
+	rate := flag.Float64("rate", 1.0/60, "Block rate, unit is blocks/second")
+	threshold := flag.Float64("threshold", 0.49, "The security threshold is the minimal hashing power(percentage) that the attacker must acquire in order to disrupt the protocol’s operation")
 
 	flag.Parse()
 
@@ -39,7 +39,8 @@ func antiConeSize(_delay, _rate, _threshold float64) {
 	}
 	coef := 1 / (math.Pow(math.E, factor) - 1)
 
-	myLog.Printf("_delay:%v _rate:%v _threshold:%v factor:%v coef:%v\n\n", _delay, _rate, _threshold, factor, coef)
+	level := 1 - 2*_threshold
+	myLog.Printf("_delay:%v _rate:%v _threshold:%v level:%v factor:%v coef:%v\n\n", _delay, _rate, _threshold, level, factor, coef)
 
 	sum := 0.0
 
@@ -62,7 +63,7 @@ func antiConeSize(_delay, _rate, _threshold float64) {
 		sum *= coef
 
 		if k < 0 {
-			if sum < _threshold {
+			if sum < level {
 				for i := 0; i < len(kQueue); i++ {
 					leftBound := outLen
 					if kk <= leftBound {
