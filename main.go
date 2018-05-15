@@ -11,36 +11,36 @@ var myLog = log.New(os.Stdout, "", 0)
 
 func main() {
 
-	delay := flag.Float64("delay", 40, "Max propagation delay, unit is second")
-	rate := flag.Float64("rate", 1.0/60, "Block rate, unit is blocks/second")
-	threshold := flag.Float64("threshold", 0.49, "The security threshold is the minimal hashing power(percentage) that the attacker must acquire in order to disrupt the protocol’s operation")
+	delay := flag.Float64("delay", 15, "Max propagation delay, unit is second")
+	rate := flag.Float64("rate", 2.0, "Block rate, unit is blocks/second")
+	level := flag.Float64("level", 0.01, "Security level, the probability of an honest block being marked red")
 
 	flag.Parse()
 
-	if *delay < 0 || *rate < 0 || *threshold < 0 {
+	if *delay < 0 || *rate < 0 || *level < 0 {
 		flag.Usage()
-		myLog.Fatalf("keep parameters above zero! delay:%v rate:%v threshold:%v", *delay, *rate, *threshold)
+		myLog.Fatalf("keep parameters above zero! delay:%v rate:%v level:%v", *delay, *rate, *level)
 	}
 
-	if *threshold > 1.0 {
+	if *level > 1.0 {
 		flag.Usage()
-		myLog.Fatalf("keep threshold under one! threshold:%v", *threshold)
+		myLog.Fatalf("keep level under one! level:%v", *level)
 	}
 
-	antiConeSize(*delay, *rate, *threshold)
+	antiConeSize(*delay, *rate, *level)
 
 }
 
-func antiConeSize(_delay, _rate, _threshold float64) {
+func antiConeSize(_delay, _rate, _level float64) {
 
 	factor := 2 * _delay * _rate
-	if factor > 1000 {
+	if factor > 10000 {
 		myLog.Fatalf("keep factor:%v = 2 * _delay:%v * _rate:%v under 1000!", factor, _delay, _rate)
 	}
-	coef := 1 / (math.Pow(math.E, factor) - 1)
 
-	level := 1 - 2*_threshold
-	myLog.Printf("_delay:%v _rate:%v _threshold:%v level:%v factor:%v coef:%v\n\n", _delay, _rate, _threshold, level, factor, coef)
+	coef := math.Pow(math.E, factor)
+
+	myLog.Printf("_delay:%v _rate:%v  level:%v factor:%v coef:%v\n\n", _delay, _rate, _level, factor, coef)
 
 	sum := 0.0
 
@@ -50,20 +50,23 @@ func antiConeSize(_delay, _rate, _threshold float64) {
 	end := 1000
 
 	k := -1
-	for kk := 1; kk < end; kk++ {
 
-		sum = 0.0
-		for j := kk + 1; j < kk+100+int(factor); j++ {
-			xx := 1.0
+	for kk := 1; kk < end; kk++ {
+		sum = coef
+
+		sigma := 1.0
+		for j := 1; j <= kk; j++ {
+			n := 1.0
 			for jj := 1; jj <= j; jj++ {
-				xx *= factor / float64(jj)
+				n *= factor / float64(jj)
 			}
-			sum += xx
+			sigma += n
 		}
-		sum *= coef
+		sum -= sigma
+		sum /= coef - 1
 
 		if k < 0 {
-			if sum < level {
+			if sum < _level {
 				for i := 0; i < len(kQueue); i++ {
 					leftBound := outLen
 					if kk <= leftBound {
@@ -73,7 +76,7 @@ func antiConeSize(_delay, _rate, _threshold float64) {
 				}
 				myLog.Printf("\n[MIN]kk=%v sum=%v\n\n", kk, sum)
 				k = kk
-				end = kk + 10 + 1
+				end = kk + outLen + 1
 			}
 
 			kQueue = append(kQueue, sum)
