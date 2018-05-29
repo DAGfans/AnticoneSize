@@ -20,3 +20,9 @@ func TestSigma(t *testing.T) {
 	}
 	log.Println(sum)
 }
+
+func TestAntiCone(t *testing.T) {
+
+	antiConeSize(15, 0.01, 0.01)
+
+}

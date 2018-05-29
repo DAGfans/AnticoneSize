@@ -63,7 +63,7 @@ func antiConeSize(_delay, _rate, _level float64) {
 			sigma += n
 		}
 		sum -= sigma
-		sum /= coef - 1
+		sum /= coef
 
 		if k < 0 {
 			if sum < _level {
