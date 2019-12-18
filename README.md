@@ -3,7 +3,7 @@ Calculate anti-cone size by  propagation delay , block rate and security thresho
 
 - Equation:
 
-![Equation](https://www.zhihu.com/equation?tex=k%28D_%7Bmax%7D%2C%CE%B4%29+%3A%3D+min+%5Cleft+%5C%7B%5Chat%7Bk%7D+%5Cin+N+%3A+%281-e%5E%7B-2%5Ccdot+D_%7Bmax%7D%5Ccdot+%CE%BB%7D%29%5E%7B-1%7D%5Ccdot+%5Cleft+%28+%5Csum_%7Bj%3D%5Chat%7Bk%7D+%2B+1%7D%5E%7B%E2%88%9E%7D%7Be%5E%7B-2%5Ccdot+D_%7Bmax%7D%5Ccdot+%CE%BB%7D%5Ccdot+%5Cfrac%7B%282%5Ccdot+D_%7Bmax%7D%5Ccdot+%CE%BB%29%5Ej%7D%7Bj%21%7D%7D%5Cright+%29%3C%CE%B4%5Cright+%5C%7D)
+![Equation](https://latex.codecogs.com/svg.latex?k%28D_%7Bmax%7D%2C%5Cdelta%20%29%20%3A%3D%20min%20%5Cleft%20%5C%7B%20%5Chat%7Bk%7D%5Cin%20N%3A%5Cleft%20%28%20%5Csum%20_%7Bj%3D%5Chat%7Bk%7D&plus;1%7D%5E%7B%5Cinfty%20%7D%7Be%5E%7B-2%20%5Ccdot%20D_%7Bmax%7D%20%5Ccdot%20%5Clambda%20%7D%20%5Ccdot%20%5Cfrac%7B%5Cleft%20%28%20-2%20%5Ccdot%20D_%7Bmax%7D%20%5Ccdot%20%5Clambda%5Cright%20%29%5E%7Bj%7D%7D%7Bj%21%7D%7D%20%5Cright%20%29%3C%20%5Cdelta%20%5Cright%20%5C%7D)
 
 
 - Equation simplification:  
@@ -25,4 +25,3 @@ Phantom基于的假设是在网络的大多数算力被诚实节点控制的情�
 
 注意: 
 - 左边第二个操作数的求和是从k+1开始的, 因为k以及以下都是正常情况
-- 左边第一个操作数, 代表的意思是至少要产生一个区块的概率, 即全概率之和1减去不产生任何区块的概率(Possion~P(X=0)=e^(-E))
